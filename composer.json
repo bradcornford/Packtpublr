@@ -1,0 +1,27 @@
+{
+    "name": "cornford/packtpublr",
+    "description": "An easy way to collect free learning ebooks from Packtpub.",
+    "keywords": ["packtpub", "learning", "free", "ebook", "redeem", "collect"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bradley Cornford",
+            "email": "me@bradleycornford.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "guzzlehttp/guzzle": "4.*"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "2.*",
+        "phpunit/phpunit": "4.*",
+        "mockery/mockery": "0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Cornford\\Packtpublr": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}

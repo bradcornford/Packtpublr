@@ -1,0 +1,6 @@
+/vendor
+/src/config/config.php
+/report/**
+composer.phar
+.DS_Store
+.idea
