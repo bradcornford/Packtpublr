@@ -12,7 +12,7 @@ use GuzzleHttp\Subscriber\Cookie;
 abstract class PacktpublrBase implements RequestableInterface
 {
 
-    const REQUEST_TIMEOUT = 5;
+    const REQUEST_TIMEOUT = 15;
 
     const REQUEST_METHOD_GET = 0;
     const REQUEST_METHOD_POST = 1;
@@ -134,6 +134,8 @@ abstract class PacktpublrBase implements RequestableInterface
 
             return $this->sendRequest($url, $parameters, $requestMethod, $requestContent);
         } catch (Exception $exception) {
+            var_dump($exception->getMessage());
+            die;
             throw new PacktpublrRequestException('An error occurred during the request.');
         }
     }
