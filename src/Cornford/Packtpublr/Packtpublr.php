@@ -3,6 +3,7 @@
 use Cornford\Packtpublr\Contracts\RedeemableInterface;
 use Cornford\Packtpublr\Exceptions\PacktpublrRedeemException;
 use Cornford\Packtpublr\Exceptions\PacktpublrRequestException;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class Packtpublr extends PacktpublrBase implements RedeemableInterface
 {
@@ -132,54 +133,48 @@ class Packtpublr extends PacktpublrBase implements RedeemableInterface
     /**
      * Run.
      *
-     * @param boolean $console
      * @param string  $email
      * @param string  $password
      *
      * @return boolean
      */
-    public function run($console = true, $email = null, $password = null)
+    public function run($email = null, $password = null)
     {
-        $return = false;
+        $result = false;
 
-        if ($console) {
-            echo 'Attempting to redeem current free-learning item from PactPub' . "\n\n";
+        $this->line('Attempting to redeem current free-learning item from PactPub');
+
+        $this->line('Logging in using URL "<fg=cyan>' . $this->baseUrl . $this->loginUrl . '</>"...');
+
+        if ($response = $this->login($email, $password)) {
+            $this->success('  Success');
+        } else {
+            $this->error('  Error');
         }
 
-        if ($console) {
-            echo 'Logging in using URL "' . "\033[34m" . $this->baseUrl . $this->loginUrl . "\033[0m" . '"...' . "\n";
+        $result |= $response;
+
+        $this->line('Redeeming current free-learning item using URL "<fg=cyan>' . $this->baseUrl . $this->redeemUrl . '</>"...');
+
+        if ($response = $this->redeem()) {
+            $this->success('  Success');
+        } else {
+            $this->error('  Error');
         }
 
-        $result = $this->login($email, $password);
-        $return |= $result;
+        $result |= $response;
 
-        if ($console) {
-            echo ($result ? "\033[32m Success \033[0m" : "\033[31m Error \033[0m") . "\n\n";
+        $this->line('Logging out of using using URL "<fg=cyan>' . $this->baseUrl . $this->logoutUrl . '</>"...');
+
+        if ($response = $this->logout()) {
+            $this->success('  Success');
+        } else {
+            $this->error('  Error');
         }
 
-        if ($console) {
-            echo 'Redeeming current free-learning item using URL "' . "\033[34m" . $this->baseUrl . $this->redeemUrl . "\033[0m" . '"...' . "\n";
-        }
+        $result |= $response;
 
-        $result = $this->redeem();
-        $return |= $result;
-
-        if ($console) {
-            echo ($result ? "\033[32m Success \033[0m" : "\033[31m Error \033[0m") . "\n\n";
-        }
-
-        if ($console) {
-            echo 'Logging out of using using URL "' . "\033[34m" . $this->baseUrl . $this->logoutUrl . "\033[0m" . '"...' . "\n";
-        }
-
-        $result = $this->logout();
-        $return |= $result;
-
-        if ($console) {
-            echo ($result ? "\033[32m Success \033[0m" : "\033[31m Error \033[0m") . "\n\n";
-        }
-
-        return (boolean) $return;
+        return (boolean) $result;
     }
 
 }

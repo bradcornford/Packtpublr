@@ -238,7 +238,12 @@ class PacktpublrSpec extends ObjectBehavior
 
         $this->setHttpClient($client);
 
-        $this->run(false)->shouldReturn(true);
+        $consoleOutput = Mockery::mock('Symfony\Component\Console\Output\ConsoleOutput');
+        $consoleOutput->shouldReceive('writeln')->andReturn(null);
+
+        $this->setConsoleOutput($consoleOutput);
+
+        $this->run()->shouldReturn(true);
     }
 
     function it_returns_true_when_a_successful_when_a_run_request_is_made_with_optional_arguments()
@@ -259,7 +264,12 @@ class PacktpublrSpec extends ObjectBehavior
 
         $this->setHttpClient($client);
 
-        $this->run(false, 'email@address.com', 'Password123')->shouldReturn(true);
+        $consoleOutput = Mockery::mock('Symfony\Component\Console\Output\ConsoleOutput');
+        $consoleOutput->shouldReceive('writeln')->andReturn(null);
+
+        $this->setConsoleOutput($consoleOutput);
+
+        $this->run('email@address.com', 'Password123')->shouldReturn(true);
     }
 
     function it_returns_false_when_a_unsuccessful_when_a_run_request_is_made()
@@ -280,7 +290,12 @@ class PacktpublrSpec extends ObjectBehavior
 
         $this->setHttpClient($client);
 
-        $this->run(false)->shouldReturn(false);
+        $consoleOutput = Mockery::mock('Symfony\Component\Console\Output\ConsoleOutput');
+        $consoleOutput->shouldReceive('writeln')->andReturn(null);
+
+        $this->setConsoleOutput($consoleOutput);
+
+        $this->run()->shouldReturn(false);
     }
 
     function it_returns_false_when_a_unsuccessful_when_a_run_request_is_made_with_optional_arguments()
@@ -301,7 +316,12 @@ class PacktpublrSpec extends ObjectBehavior
 
         $this->setHttpClient($client);
 
-        $this->run(false, 'email@address.com', 'Password123')->shouldReturn(false);
+        $consoleOutput = Mockery::mock('Symfony\Component\Console\Output\ConsoleOutput');
+        $consoleOutput->shouldReceive('writeln')->andReturn(null);
+
+        $this->setConsoleOutput($consoleOutput);
+
+        $this->run('email@address.com', 'Password123')->shouldReturn(false);
     }
 
     function it_should_set_and_get_a_http_client()

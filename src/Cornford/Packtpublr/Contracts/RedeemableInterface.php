@@ -40,12 +40,11 @@ interface RedeemableInterface
     /**
      * Run.
      *
-     * @param boolean $console
      * @param string  $email
      * @param string  $password
      *
      * @return boolean
      */
-    public function run($console = true, $email = null, $password = null);
+    public function run($email = null, $password = null);
 
 }

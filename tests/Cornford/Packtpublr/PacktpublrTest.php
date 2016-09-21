@@ -19,7 +19,7 @@ class PacktpublrTest extends TestCase
     {
         $instance = new Packtpublr(['email' => self::EMAIL, 'password' => self::PASSWORD]);
 
-        $this->assertEquals($instance, new Packtpublr(['email' => 'email@address.com', 'password' => 'Password123']));
+        $this->assertInstanceOf(Packtpublr::class, $instance);
     }
 
     /**
@@ -192,7 +192,12 @@ class PacktpublrTest extends TestCase
 
         $instance->setHttpClient($client);
 
-        $this->assertTrue($instance->run(false));
+        $consoleOutput = Mockery::mock('Symfony\Component\Console\Output\ConsoleOutput');
+        $consoleOutput->shouldReceive('writeln')->andReturn(null);
+
+        $instance->setConsoleOutput($consoleOutput);
+
+        $this->assertTrue($instance->run());
     }
 
     /**
@@ -218,7 +223,12 @@ class PacktpublrTest extends TestCase
 
         $instance->setHttpClient($client);
 
-        $this->assertTrue($instance->run(true));
+        $consoleOutput = Mockery::mock('Symfony\Component\Console\Output\ConsoleOutput');
+        $consoleOutput->shouldReceive('writeln')->andReturn(null);
+
+        $instance->setConsoleOutput($consoleOutput);
+
+        $this->assertTrue($instance->run());
     }
 
     public function testRunWithOptionalArguments()
@@ -241,7 +251,12 @@ class PacktpublrTest extends TestCase
 
         $instance->setHttpClient($client);
 
-        $this->assertTrue($instance->run(false, 'email@address.com', 'Password123'));
+        $consoleOutput = Mockery::mock('Symfony\Component\Console\Output\ConsoleOutput');
+        $consoleOutput->shouldReceive('writeln')->andReturn(null);
+
+        $instance->setConsoleOutput($consoleOutput);
+
+        $this->assertTrue($instance->run('email@address.com', 'Password123'));
     }
 
     public function testSetAndGetHttpClient()

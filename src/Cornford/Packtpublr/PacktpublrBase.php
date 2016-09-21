@@ -1,6 +1,7 @@
 <?php namespace Cornford\Packtpublr;
 
 use Cornford\Packtpublr\Contracts\RequestableInterface;
+use Cornford\Packtpublr\Contracts\OutputableInterface;
 use Cornford\Packtpublr\Exceptions\PacktpublrArgumentException;
 use Cornford\Packtpublr\Exceptions\PacktpublrRequestException;
 use Exception;
@@ -8,8 +9,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Subscriber\Cookie;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
-abstract class PacktpublrBase implements RequestableInterface
+abstract class PacktpublrBase implements RequestableInterface, OutputableInterface
 {
 
     const REQUEST_TIMEOUT = 15;
@@ -36,6 +38,13 @@ abstract class PacktpublrBase implements RequestableInterface
      * @var Cookie
      */
     protected $cookieSubscriber;
+
+    /**
+     * Symfony console output.
+     *
+     * @var ConsoleOutput
+     */
+    protected $consoleOutput;
 
     /**
      * The request type.
@@ -106,6 +115,8 @@ abstract class PacktpublrBase implements RequestableInterface
 
         $this->cookieSubscriber = new Cookie(new CookieJar());
         $this->httpClient->getEmitter()->attach($this->cookieSubscriber);
+
+        $this->consoleOutput = new ConsoleOutput();
     }
 
     /**
@@ -134,8 +145,6 @@ abstract class PacktpublrBase implements RequestableInterface
 
             return $this->sendRequest($url, $parameters, $requestMethod, $requestContent);
         } catch (Exception $exception) {
-            var_dump($exception->getMessage());
-            die;
             throw new PacktpublrRequestException('An error occurred during the request.');
         }
     }
@@ -264,6 +273,88 @@ abstract class PacktpublrBase implements RequestableInterface
         $this->getHttpClient()->getEmitter()->detach($this->cookieSubscriber);
         $this->cookieSubscriber = $cookieSubscriber;
         $this->getHttpClient()->getEmitter()->attach($this->cookieSubscriber);
+    }
+
+    /**
+     * Get console output.
+     *
+     * @return ConsoleOutput
+     */
+    public function getConsoleOutput()
+    {
+        return $this->consoleOutput;
+    }
+
+    /**
+     * Set console output.
+     *
+     * @param ConsoleOutput $consoleOutput
+     *
+     * @return void
+     */
+    public function setConsoleOutput(ConsoleOutput $consoleOutput)
+    {
+        $this->consoleOutput = $consoleOutput;
+    }
+
+    /**
+     * Write a string as standard output.
+     *
+     * @param string $string
+     *
+     * @return void
+     */
+    public function line($string)
+    {
+        $this->consoleOutput->writeln($string);
+    }
+
+    /**
+     * Write a string as information output.
+     *
+     * @param string $string
+     * 
+     * @return void
+     */
+    public function info($string)
+    {
+        $this->consoleOutput->writeln("<fg=cyan>$string</>");
+    }
+
+    /**
+     * Write a string as success output.
+     *
+     * @param string $string
+     *
+     * @return void
+     */
+    public function success($string)
+    {
+        $this->consoleOutput->writeln("<fg=green>$string</>");
+    }
+
+    /**
+     * Write a string as warning output.
+     *
+     * @param string $string
+     * 
+     * @return void
+     */
+    public function warning($string)
+    {
+        $this->consoleOutput->writeln("<fg=yellow>$string</>");
+    }
+
+    /**
+     * Write a string as error output.
+     *
+     * @param string $string
+     * 
+     * @return void
+     */
+    public function error($string)
+    {
+        $this->consoleOutput->writeln("<fg=red>$string</>");
     }
 
     /**
