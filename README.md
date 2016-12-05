@@ -40,6 +40,12 @@ You can now configure Packtpublr in a few simple steps. Open `src/config/config.
 - `email` - Packtpub email address.
 - `password` - Packtpub password.
 
+## Schedule
+
+You can set Packtpublr to run as a scheduled item using a Crontab. Firstly run `crontab -e` and add the following line:
+
+`0 9 * * * <PATH_TO_PHP>/php <PATH_TO_PACKTPUBLR>/index.php 2>&1`
+
 ## Usage
 
 It's really as simple as using the Packtpublr class in any Controller / Model / File you see fit with:
